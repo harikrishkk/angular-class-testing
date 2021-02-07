@@ -5,7 +5,6 @@ import { AnotherService } from './another.service';
 import { Spy, createSpyFromClass } from 'jasmine-auto-spies';
 
 describe('FrontService', () => {
-  
   let serviceUnderTest: FrontService;
   let anotherServiceSpy: Spy<AnotherService>;
   let fakeLlamas: Llama[];
@@ -15,7 +14,7 @@ describe('FrontService', () => {
     TestBed.configureTestingModule({
       providers: [
         FrontService,
-        {provide: AnotherService, useValue: createSpyFromClass(AnotherService)}
+        { provide: AnotherService, useValue: createSpyFromClass(AnotherService) }
       ]
     });
 
@@ -27,21 +26,19 @@ describe('FrontService', () => {
   });
 
   describe('METHOD: getFeaturedLlamas', () => {
-
     Given(() => {
-      fakeLlamas = [{ name: 'FAKE NAME', imageFileName: 'FAKE IMAGE' }];
+      fakeLlamas = [{ id: '1', name: 'FAKE NAME', imageFileName: 'FAKE IMAGE' }];
       anotherServiceSpy.getLlamasFromServer.and.nextOneTimeWith(fakeLlamas);
     });
 
-    When(fakeAsync( async () => {
-      actualResult = await serviceUnderTest.getFeaturedLlamas();
-    }));
+    When(
+      fakeAsync(async () => {
+        actualResult = await serviceUnderTest.getFeaturedLlamas();
+      })
+    );
 
     Then(() => {
       expect(actualResult).toEqual(fakeLlamas);
     });
-    
-    
   });
-  
 });

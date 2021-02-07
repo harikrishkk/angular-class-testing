@@ -9,17 +9,13 @@ import { RouterAdapterService } from '../_services/router-adapter/router-adapter
   styleUrls: ['./front.component.scss']
 })
 export class FrontComponent implements OnInit {
-  
   llamas: Llama[];
   showErrorMessage: boolean;
 
-  constructor(
-    private frontService: FrontService,
-    private router: RouterAdapterService
-  ) { }
+  constructor(private frontService: FrontService, private router: RouterAdapterService) {}
 
   ngOnInit() {
-    return this.frontService.getFeaturedLlamas({newest: true}).then(
+    return this.frontService.getFeaturedLlamas({ newest: true }).then(
       result => {
         this.llamas = result;
       },
@@ -31,9 +27,5 @@ export class FrontComponent implements OnInit {
 
   isListVisible(): boolean {
     return !!this.llamas && this.llamas.length > 0;
-  }
-
-  goToLlamaPage(llamaId: string) {
-    this.router.goToUrl(`/llama/${llamaId}`);
   }
 }
