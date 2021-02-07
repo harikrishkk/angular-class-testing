@@ -1,3 +1,4 @@
+import { appRoutesNames } from './../app.routes.names';
 import { Component, OnInit } from '@angular/core';
 import { FrontService } from './front.service';
 import { Llama } from './llama.model';
@@ -11,6 +12,7 @@ import { RouterAdapterService } from '../_services/router-adapter/router-adapter
 export class FrontComponent implements OnInit {
   llamas: Llama[];
   showErrorMessage: boolean;
+  llamaPageLink = `/${appRoutesNames.LLAMA_PAGE}`;
 
   constructor(private frontService: FrontService, private router: RouterAdapterService) {}
 
