@@ -1,7 +1,7 @@
 import { appRoutesNames } from './../app.routes.names';
 import { Component, OnInit } from '@angular/core';
 import { FrontService } from './front.service';
-import { Llama } from './llama.model';
+import { Llama } from '../_types/llama.type';
 import { RouterAdapterService } from '../_services/router-adapter/router-adapter.service';
 
 @Component({
@@ -31,6 +31,6 @@ export class FrontComponent implements OnInit {
     return !!this.llamas && this.llamas.length > 0;
   }
   poke(llama: Llama) {
-    this.frontService.poke(llama);
+    this.frontService.pokeLlama(llama);
   }
 }

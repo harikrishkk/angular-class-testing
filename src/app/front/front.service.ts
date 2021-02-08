@@ -1,15 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Llama } from './llama.model';
-import { AnotherService } from './another.service';
+import { Llama } from '../_types/llama.type';
+import { LlamaRemoteService } from '../_services/llama-remote/llama-remote.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FrontService {
-  constructor(private anotherService: AnotherService) {}
+  userLlama: Llama;
+  constructor(private llamaRemoteService: LlamaRemoteService) {}
 
   getFeaturedLlamas(config?: any): Promise<Llama[]> {
-    return this.anotherService.getLlamasFromServer().toPromise();
+    return this.llamaRemoteService.getLlamasFromServer().toPromise();
   }
-  poke(llama: Llama) {}
+  pokeLlama(llama: Llama) {
+    const userllamaId = this.userLlama.id;
+    const pokedByClone = llama.pokedByTheseLlamas ? [...llama.pokedByTheseLlamas] : [];
+    pokedByClone.push(userllamaId);
+
+    this.llamaRemoteService.update(llama.id, {
+      pokedByTheseLlamas: pokedByClone
+    });
+  }
 }
