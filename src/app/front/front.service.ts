@@ -9,7 +9,7 @@ export class FrontService {
   constructor(private anotherService: AnotherService) {}
 
   getFeaturedLlamas(config?: any): Promise<Llama[]> {
-
     return this.anotherService.getLlamasFromServer().toPromise();
   }
+  poke(llama: Llama) {}
 }
