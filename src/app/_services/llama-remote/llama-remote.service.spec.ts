@@ -51,6 +51,11 @@ describe('LlamaRemoteService', () => {
   describe('METHOD: update', () => {
     let fakeLlamaIdArg: string;
     let fakeLlamaChangesArg: Partial<Llama>;
+    let errorIsExpected: boolean;
+
+    Given(() => {
+      errorIsExpected = false;
+    });
 
     When(
       fakeAsync(async () => {
@@ -60,6 +65,10 @@ describe('LlamaRemoteService', () => {
             fakeLlamaChangesArg
           );
         } catch (error) {
+          if (!errorIsExpected) {
+            throw error;
+          }
+
           actualError = error;
         }
       })
@@ -87,6 +96,7 @@ describe('LlamaRemoteService', () => {
 
     describe('METHOD fail', () => {
       Given(() => {
+        errorIsExpected = true;
         httpAdapterServiceSpy.patch.and.rejectWith('Fake error');
       });
       Then(() => {
