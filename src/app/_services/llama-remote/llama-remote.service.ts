@@ -14,8 +14,8 @@ export class LlamaRemoteService {
     return this.http.get<Llama[]>('/api/newestLlamas');
   }
 
-  update(llamaId: string, changes: Partial<Llama>) {
+  update(llamaId: string, changes: Partial<Llama>): Promise<Llama> {
     const url = `/api/llamas/${llamaId}`;
-    this.httpAdapterService.patch(url, changes);
+    return this.httpAdapterService.patch(url, changes);
   }
 }

@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { Spy, createSpyFromClass } from 'jasmine-auto-spies';
 import { LlamaRemoteService } from './llama-remote.service';
 import { Llama } from '../../_types/llama.type';
@@ -10,6 +10,7 @@ describe('LlamaRemoteService', () => {
   let httpSpy: Spy<HttpClient>;
   let fakeLlamas: Llama[];
   let actualResult: any;
+  let actualError: any;
   let httpAdapterServiceSpy: Spy<HttpAdapterService>;
 
   Given(() => {
@@ -27,6 +28,7 @@ describe('LlamaRemoteService', () => {
 
     fakeLlamas = undefined;
     actualResult = undefined;
+    actualError = undefined;
   });
 
   describe('METHOD: getLlamasFromServer', () => {
@@ -47,27 +49,53 @@ describe('LlamaRemoteService', () => {
 
   //descwhen shortcut
   describe('METHOD: update', () => {
-    let fakeLlamaId: string;
-    let fakeLlamaChanges: Partial<Llama>;
+    let fakeLlamaIdArg: string;
+    let fakeLlamaChangesArg: Partial<Llama>;
 
-    Given(() => {
-      fakeLlamaId = '';
-      fakeLlamaChanges = {
-        pokedByTheseLlamas: ['fake id']
-      };
+    When(
+      fakeAsync(async () => {
+        try {
+          actualResult = await serviceUnderTest.update(
+            fakeLlamaIdArg,
+            fakeLlamaChangesArg
+          );
+        } catch (error) {
+          actualError = error;
+        }
+      })
+    );
+
+    describe('given update was successful return updated llama', () => {
+      let expectedReturnedLlama: Llama;
+      Given(() => {
+        fakeLlamaIdArg = 'fake id';
+        fakeLlamaChangesArg = {
+          pokedByTheseLlamas: ['fake id']
+        };
+        expectedReturnedLlama = createDefaultFakeLlama();
+        expectedReturnedLlama.id = fakeLlamaIdArg;
+        expectedReturnedLlama.pokedByTheseLlamas = ['fake id'];
+        const expectedUrl = `/api/llamas/${fakeLlamaIdArg}`;
+        httpAdapterServiceSpy.patch
+          .mustBeCalledWith(expectedUrl, fakeLlamaChangesArg)
+          .resolveWith(expectedReturnedLlama);
+      });
+      Then(() => {
+        expect(actualResult).toEqual(expectedReturnedLlama);
+      });
     });
 
-    When(() => {
-      serviceUnderTest.update(fakeLlamaId, fakeLlamaChanges);
-    });
-
-    Then(() => {
-      // DONT MOCK WHAT YOU DONT OWN
-      const expectedUrl = `/api/llamas/${fakeLlamaId}`;
-      expect(httpAdapterServiceSpy.patch).toHaveBeenCalledWith(
-        expectedUrl,
-        fakeLlamaChanges
-      );
+    describe('METHOD fail', () => {
+      Given(() => {
+        httpAdapterServiceSpy.patch.and.rejectWith('Fake error');
+      });
+      Then(() => {
+        expect(actualError).toEqual('Fake error');
+      });
     });
   });
 });
+
+function createDefaultFakeLlama() {
+  return { id: '1', name: 'Billy', imageFileName: 'fakeImage.jpg' };
+}
