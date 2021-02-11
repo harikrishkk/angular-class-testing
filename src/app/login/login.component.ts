@@ -1,5 +1,5 @@
 import { LoginService } from './login.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -9,12 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup = new FormGroup({
-    email: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required])
   });
   constructor(private loginService: LoginService) {}
 
   ngOnInit(): void {}
+
+  get emailControl(): AbstractControl {
+    return this.loginForm.get('email');
+  }
 
   handleLogin() {
     if (this.loginForm.valid) {

@@ -8,7 +8,7 @@ import { LoginService } from './login.service';
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let loginServiceSpy: Spy<LoginService>;
-
+  let fakeValue: any;
   Given(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -21,6 +21,33 @@ describe('LoginComponent', () => {
     });
     component = TestBed.inject(LoginComponent);
     loginServiceSpy = TestBed.inject<any>(LoginService);
+    fakeValue = undefined;
+  });
+
+  describe('email changed', () => {
+    When(() => {
+      component.loginForm.get('email').setValue(fakeValue);
+    });
+
+    describe('Given email empty ', () => {
+      Given(() => {
+        fakeValue = '';
+      });
+
+      Then(() => {
+        expect(component.emailControl.valid).toBeFalsy();
+      });
+    });
+
+    describe('Given email not valid ', () => {
+      Given(() => {
+        fakeValue = 'notanemail';
+      });
+
+      Then(() => {
+        expect(component.emailControl.valid).toBeFalsy();
+      });
+    });
   });
 
   describe('METHOD handleLogin', () => {
