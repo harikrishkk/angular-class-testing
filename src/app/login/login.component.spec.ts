@@ -24,6 +24,12 @@ describe('LoginComponent', () => {
     fakeValue = undefined;
   });
 
+  describe('INIT', () => {
+    Then(() => {
+      expect(component.registerLink).toEqual('/register');
+    });
+  });
+
   describe('email changed', () => {
     When(() => {
       component.loginForm.get('email').setValue(fakeValue);
