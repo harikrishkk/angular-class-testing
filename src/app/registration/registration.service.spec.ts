@@ -8,5 +8,13 @@ import { RegistrationDetails } from '../_types/registration-details.type';
 import { LlamaRemoteService } from '../_services/llama-remote/llama-remote.service';
 
 describe('RegistrationService', () => {
-  let actualResult: any;
+  let service: RegistrationService;
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(RegistrationService);
+  });
+
+  it('shpuld create', () => {
+    expect(service).toBeTruthy();
+  });
 });
