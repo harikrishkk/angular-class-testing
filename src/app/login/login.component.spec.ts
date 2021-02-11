@@ -50,6 +50,52 @@ describe('LoginComponent', () => {
     });
   });
 
+  describe('password changed', () => {
+    When(() => {
+      component.passwordControl.setValue(fakeValue);
+    });
+
+    describe('Given password empty ', () => {
+      Given(() => {
+        fakeValue = '';
+      });
+
+      Then(() => {
+        expect(component.passwordControl.valid).toBeFalsy();
+      });
+    });
+
+    describe('Given password less than 7 characters ', () => {
+      Given(() => {
+        fakeValue = '12345';
+      });
+
+      Then(() => {
+        expect(component.passwordControl.valid).toBeFalsy();
+      });
+    });
+
+    describe('Given password more than 8 characters ', () => {
+      Given(() => {
+        fakeValue = '1234566789';
+      });
+
+      Then(() => {
+        expect(component.passwordControl.valid).toBeTruthy();
+      });
+    });
+
+    describe('Given email not valid ', () => {
+      Given(() => {
+        fakeValue = 'notanemail';
+      });
+
+      Then(() => {
+        expect(component.emailControl.valid).toBeFalsy();
+      });
+    });
+  });
+
   describe('METHOD handleLogin', () => {
     let fakeCredentials: UserCredentials;
     When(() => {
@@ -60,7 +106,7 @@ describe('LoginComponent', () => {
       Given(() => {
         fakeCredentials = {
           email: 'someemail@example.com',
-          password: '123456'
+          password: '123456789'
         };
         component.loginForm.setValue(fakeCredentials);
       });
